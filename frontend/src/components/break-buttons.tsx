@@ -1,9 +1,14 @@
 "use client";
 
+import { Loader2Icon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "react-hot-toast";
 import { z } from "zod";
-import { env } from "~/env";
 import { getApiUrl } from "~/utils/base-urls";
+
+// TODO: delete 0.1
+const MINUTES_PRESETS = [0.1, 1, 5] as const;
 
 const apiPostResponseSchema = z.object({
   id: z.string().min(1),
@@ -11,49 +16,55 @@ const apiPostResponseSchema = z.object({
 
 export function BreakButtons() {
   const router = useRouter();
+  const [currentMinutesLoading, setCurrentMinutesLoading] = useState<
+    (typeof MINUTES_PRESETS)[number] | null
+  >(null);
 
-  const handleNewBreak = async (s: number) => {
-    // TODO: get url from env
+  const handleNewBreak = async (minutes: (typeof MINUTES_PRESETS)[number]) => {
+    setCurrentMinutesLoading(minutes);
 
     const date = new Date();
-    date.setSeconds(date.getSeconds() + s);
+    date.setMinutes(date.getMinutes() + minutes);
 
-    // TODO: handle errors with toast
-    const result = await fetch(`${getApiUrl()}/api/break`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ date }),
-    });
+    try {
+      const result = await fetch(`${getApiUrl()}/api/break`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ date }),
+      });
 
-    const json = (await result.json()) as unknown;
+      const json = (await result.json()) as unknown;
 
-    const { id } = apiPostResponseSchema.parse(json);
+      const { id } = apiPostResponseSchema.parse(json);
 
-    router.push(`/${id}`);
+      router.push(`/${id}`);
+    } catch (_) {
+      setCurrentMinutesLoading(null);
+      toast.error(
+        <div className="font-mono font-semibold">
+          Error occured, please try again
+        </div>,
+      );
+    }
   };
 
   return (
     <>
-      <button
-        onClick={() => handleNewBreak(10)}
-        className="rounded bg-emerald-400 px-4 py-2 text-xl font-semibold text-white hover:brightness-90"
-      >
-        10 sec
-      </button>
-      <button
-        onClick={() => handleNewBreak(1 * 60)}
-        className="rounded bg-emerald-400 px-4 py-2 text-xl font-semibold text-white hover:brightness-90"
-      >
-        1 min
-      </button>
-      <button
-        onClick={() => handleNewBreak(5 * 60)}
-        className="rounded bg-emerald-400 px-4 py-2 text-xl font-semibold text-white hover:brightness-90"
-      >
-        5 min
-      </button>
+      {MINUTES_PRESETS.map((minutes) => (
+        <button
+          key={minutes}
+          onClick={() => handleNewBreak(minutes)}
+          disabled={!!currentMinutesLoading}
+          className="inline-flex items-center gap-2 rounded bg-emerald-400 px-4 py-2 text-xl font-semibold text-white hover:brightness-90 disabled:cursor-not-allowed disabled:brightness-75"
+        >
+          {minutes == currentMinutesLoading && (
+            <Loader2Icon className="h-5 w-5 animate-spin" />
+          )}
+          <span>{minutes} min</span>
+        </button>
+      ))}
       {/*<button className="rounded bg-emerald-400 px-4 py-2 text-xl font-semibold text-white hover:brightness-90">
           New break
         </button>*/}
