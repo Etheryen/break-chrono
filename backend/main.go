@@ -1,7 +1,7 @@
 package main
 
 import (
-	"break-chrono/db"
+	"break-chrono/database"
 	"log"
 	"os"
 
@@ -31,6 +31,8 @@ func getCorsConfig() *cors.Config {
 
 func main() {
 	app := fiber.New()
+	database.Connect()
+	db := database.Db
 
 	app.Use(logger.New())
 
