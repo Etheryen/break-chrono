@@ -4,8 +4,10 @@ import (
 	"break-chrono/database"
 	"log"
 	"os"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cache"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/google/uuid"
@@ -35,8 +37,10 @@ func main() {
 	db := database.Db
 
 	app.Use(logger.New())
-
 	app.Use(cors.New(getCorsConfig()))
+	app.Use(cache.New(cache.Config{
+		Expiration: 24 * time.Hour,
+	}))
 
 	api := app.Group("/api")
 	breaks := api.Group("/breaks")
