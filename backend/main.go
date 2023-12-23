@@ -28,7 +28,7 @@ func getCorsConfig() cors.Config {
 		corsConfig.AllowOrigins = "https://break-chrono.ncx.pl, https://break-chrono.vercel.app"
 	}
 
-	log.Println(corsConfig.AllowOrigins)
+	log.Println("CORS Origins:", corsConfig.AllowOrigins)
 
 	return corsConfig
 }
