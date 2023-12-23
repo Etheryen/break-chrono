@@ -24,15 +24,17 @@ export default async function BreakPage({
   const relativeTime = dateToRelative(dateObj);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-neutral-100">
+    <main className="flex min-h-screen flex-col items-center justify-center">
       <Link
         href={"/"}
-        className="absolute left-6 top-6 rounded-xl px-8 py-4 text-4xl font-extrabold tracking-tight hover:cursor-pointer hover:bg-neutral-200"
+        className="absolute top-6 rounded-xl px-8 py-4 text-4xl font-extrabold tracking-tight hover:cursor-pointer hover:bg-neutral-100 2xl:left-6"
       >
         Break<span className="text-emerald-400">Chrono</span>
       </Link>
-      <CopyLink id={params.id} />
-      <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
+      <div className="absolute top-32 text-center 2xl:top-10">
+        <CopyLink id={params.id} />
+      </div>
+      <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
         <div>
           {/* <h2>
             {/* FIXME: that doesn't update */}

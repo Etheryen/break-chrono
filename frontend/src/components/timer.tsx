@@ -6,12 +6,21 @@ import { cn } from "~/utils/classnames";
 export function Timer({ end }: { end: Date }) {
   const { days, hours, minutes, seconds } = useCountdown(end);
 
+  if (days > 99) {
+    return (
+      <div className="text-center font-mono text-[8vw] font-semibold text-red-600">
+        Long ago...
+      </div>
+    );
+  }
+
   const isBreakOver = new Date() > end;
 
   return (
     <div
-      className={cn("font-mono text-[18vw] font-semibold", {
-        "text-emerald-400": !isBreakOver,
+      className={cn("font-mono text-[18vw] font-semibold text-emerald-400", {
+        "text-[15vw]": hours > 0 && days < 1,
+        "text-[12vw]": days > 0,
         "text-red-600": isBreakOver,
       })}
     >
