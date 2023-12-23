@@ -27,7 +27,7 @@ export function BreakButtons() {
     date.setMinutes(date.getMinutes() + minutes);
 
     try {
-      const result = await fetch(`${getApiUrl()}/api/break`, {
+      const result = await fetch(`${getApiUrl()}/api/breaks`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

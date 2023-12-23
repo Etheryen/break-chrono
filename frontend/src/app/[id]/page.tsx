@@ -16,7 +16,7 @@ export default async function BreakPage({
 }) {
   // TODO: handle errors
   // TODO: maybe generate static params
-  const result = await fetch(`${getApiUrl()}/api/break/${params.id}`);
+  const result = await fetch(`${getApiUrl()}/api/breaks/${params.id}`);
   const json = (await result.json()) as unknown;
   const { date } = apiGetResponseSchema.parse(json);
   const dateObj = new Date(date);

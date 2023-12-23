@@ -39,8 +39,9 @@ func main() {
 	app.Use(cors.New(*getCorsConfig()))
 
 	api := app.Group("/api")
+	breaks := api.Group("/breaks")
 
-	api.Get("/break/:id", func(c *fiber.Ctx) error {
+	breaks.Get(":id", func(c *fiber.Ctx) error {
 		id := c.Params("id")
 		date := db.Get(id)
 		if date != "" {
@@ -53,7 +54,7 @@ func main() {
 		return nil
 	})
 
-	api.Post("/break", func(c *fiber.Ctx) error {
+	breaks.Post("", func(c *fiber.Ctx) error {
 		newBreak := new(NewBreak)
 
 		if err := c.BodyParser(newBreak); err != nil {
