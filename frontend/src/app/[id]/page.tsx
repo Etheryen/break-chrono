@@ -24,7 +24,7 @@ export default async function BreakPage({
   const relativeTime = dateToRelative(dateObj);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center">
+    <main className="flex min-h-screen flex-col items-center justify-center supports-[height:100dvh]:min-h-[100dvh]">
       <Link
         href={"/"}
         className="absolute top-6 rounded-xl px-8 py-4 text-4xl font-extrabold tracking-tight hover:cursor-pointer hover:bg-neutral-100 2xl:left-6"
