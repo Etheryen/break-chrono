@@ -15,8 +15,8 @@ type NewBreak struct {
 	Date string `json:"date"`
 }
 
-func getCorsConfig() *cors.Config {
-	corsConfig := new(cors.Config)
+func getCorsConfig() cors.Config {
+	var corsConfig cors.Config
 
 	if os.Getenv("ENVIRONMENT") == "development" {
 		corsConfig.AllowOriginsFunc = func(origin string) bool {
@@ -36,7 +36,7 @@ func main() {
 
 	app.Use(logger.New())
 
-	app.Use(cors.New(*getCorsConfig()))
+	app.Use(cors.New(getCorsConfig()))
 
 	api := app.Group("/api")
 	breaks := api.Group("/breaks")
