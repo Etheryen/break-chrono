@@ -1,21 +1,20 @@
 package main
 
 import (
+	"break-chrono/controllers"
 	"break-chrono/database"
 	"log"
 	"os"
 	"time"
 
+	_ "break-chrono/docs"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cache"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
-	"github.com/google/uuid"
+	"github.com/gofiber/swagger"
 )
-
-type NewBreak struct {
-	Date string `json:"date"`
-}
 
 func getCorsConfig() cors.Config {
 	var corsConfig cors.Config
@@ -33,10 +32,14 @@ func getCorsConfig() cors.Config {
 	return corsConfig
 }
 
+//	@title			BreakChrono
+//	@version		1.0
+//	@description	Set up a timer that you can share with others
+//	@host			localhost:8000
+//	@BasePath		/
 func main() {
 	app := fiber.New()
 	database.Connect()
-	db := database.Db
 
 	app.Use(logger.New())
 	app.Use(cors.New(getCorsConfig()))
@@ -44,41 +47,13 @@ func main() {
 		Expiration: 24 * time.Hour,
 	}))
 
+	app.Get("/swagger/*", swagger.HandlerDefault)
+
 	api := app.Group("/api")
 	breaks := api.Group("/breaks")
 
-	breaks.Get(":id", func(c *fiber.Ctx) error {
-		id := c.Params("id")
-		date := db.Get(id)
-		if date != "" {
-			return c.JSON(&fiber.Map{
-				"date": date,
-			})
-		}
-
-		c.Status(fiber.StatusNotFound)
-		return nil
-	})
-
-	breaks.Post("", func(c *fiber.Ctx) error {
-		newBreak := new(NewBreak)
-
-		if err := c.BodyParser(newBreak); err != nil {
-			return err
-		}
-
-		// TODO: make sure the date is valid, use a parser / change type to date
-
-		log.Println("Creating break until: ", newBreak.Date)
-
-		id := uuid.New().String()
-		db.Set(id, newBreak.Date)
-
-		c.Status(fiber.StatusCreated)
-		return c.JSON(&fiber.Map{
-			"id": id,
-		})
-	})
+	breaks.Get(":id", controllers.GetDate)
+	breaks.Post("", controllers.SetDate)
 
 	log.Fatal(app.Listen(":8000"))
 }
