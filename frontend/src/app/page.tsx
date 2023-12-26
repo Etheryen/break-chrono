@@ -8,7 +8,7 @@ export default function HomePage() {
         <h1 className="text-5xl font-extrabold tracking-tight sm:text-7xl md:text-[7rem]">
           Break<span className="text-emerald-400">Chrono</span>
         </h1>
-        <div className="flex flex-wrap justify-center gap-4">
+        <div className="flex w-[80vw] flex-wrap justify-center gap-4 sm:max-w-sm">
           <BreakButtons />
         </div>
       </div>
