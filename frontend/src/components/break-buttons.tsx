@@ -7,8 +7,7 @@ import { toast } from "react-hot-toast";
 import { z } from "zod";
 import { getApiUrl } from "~/utils/base-urls";
 
-// TODO: delete 0.1
-const MINUTES_PRESETS = [0.1, 1, 5] as const;
+const MINUTES_PRESETS = [5, 10, 15, 20, 25, 30, 45, 60] as const;
 
 const apiPostResponseSchema = z.object({
   id: z.string().min(1),
@@ -57,7 +56,7 @@ export function BreakButtons() {
           key={minutes}
           onClick={() => handleNewBreak(minutes)}
           disabled={!!currentMinutesLoading}
-          className="inline-flex items-center gap-2 rounded bg-emerald-400 px-4 py-2 text-xl font-semibold text-white hover:brightness-90 disabled:cursor-not-allowed disabled:brightness-75"
+          className="inline-flex items-center justify-center gap-2 rounded bg-emerald-400 px-4 py-2 text-xl font-semibold text-white hover:brightness-90 disabled:cursor-not-allowed disabled:brightness-75"
         >
           {minutes == currentMinutesLoading && (
             <Loader2Icon className="h-5 w-5 animate-spin" />
