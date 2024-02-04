@@ -3,6 +3,8 @@ package main
 import (
 	"break-chrono/controllers"
 	"break-chrono/database"
+	"break-chrono/flags"
+	"fmt"
 	"log"
 	"os"
 	"time"
@@ -32,11 +34,11 @@ func getCorsConfig() cors.Config {
 	return corsConfig
 }
 
-//	@title			BreakChrono
-//	@version		1.0
-//	@description	Set up a timer that you can share with others
-//	@host			localhost:8000
-//	@BasePath		/
+// @title			BreakChrono
+// @version		1.0
+// @description	Set up a timer that you can share with others
+// @host			localhost:8000
+// @BasePath		/
 func main() {
 	app := fiber.New()
 	database.Connect()
@@ -55,5 +57,22 @@ func main() {
 	breaks.Get(":id", controllers.GetDate)
 	breaks.Post("", controllers.SetDate)
 
-	log.Fatal(app.Listen(":8000"))
+	port, cert, key := flags.GetAll()
+
+	if port == 0 {
+		log.Fatalln("No port provided usint --port")
+	}
+
+	portString := fmt.Sprintf("%v%v", ':', port)
+
+	if cert == "" || key == "" {
+		log.Fatalln(app.Listen(portString))
+		return
+	}
+
+	app.Get("/", func(c *fiber.Ctx) error {
+		return c.SendString(c.Protocol())
+	})
+
+	log.Fatal(app.ListenTLS(portString, cert, key))
 }
