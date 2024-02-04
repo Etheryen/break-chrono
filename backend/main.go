@@ -66,6 +66,7 @@ func main() {
 	portString := fmt.Sprintf("%v%v", ':', port)
 
 	if cert == "" || key == "" {
+		fmt.Println("NOT using https")
 		log.Fatalln(app.Listen(portString))
 		return
 	}
@@ -74,5 +75,6 @@ func main() {
 		return c.SendString(c.Protocol())
 	})
 
+	fmt.Println("Using https")
 	log.Fatal(app.ListenTLS(portString, cert, key))
 }
