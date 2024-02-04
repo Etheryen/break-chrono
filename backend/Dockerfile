@@ -1,12 +1,11 @@
+FROM golang:latest
+
 WORKDIR /app
 
-COPY go.mod ./
-RUN go mod download
+ADD . /app
 
-COPY *.go ./
-
-RUN go build -o /go-docker-demo
+RUN go build -o /main
 
 EXPOSE 8000
 
-CMD [ "/go-docker-demo" ]
+CMD ["/main"]
