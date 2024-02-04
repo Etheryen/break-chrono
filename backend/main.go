@@ -63,7 +63,7 @@ func main() {
 		log.Fatalln("No port provided usint --port")
 	}
 
-	portString := fmt.Sprintf("%v%v", ':', port)
+	portString := fmt.Sprintf("%v%v", ":", port)
 
 	if cert == "" || key == "" {
 		fmt.Println("NOT using https")
