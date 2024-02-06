@@ -1,8 +1,10 @@
+flags = --port 8000
+
 dev:
-	clear && gow -s -v run cmd/main.go --port 8000
+	clear && gow -s -v run cmd/main.go $(flags)
 
 build:
 	go build -o bin/app cmd/main.go
 
 run: build
-	./bin/app --port 8000
+	./bin/app $(flags)
