@@ -1,27 +1,14 @@
 import Link from "next/link";
-import { z } from "zod";
 import { CopyLink } from "~/components/copy-link";
 import { Timer } from "~/components/timer";
-import { getApiUrl } from "~/utils/base-urls";
-import { dateToRelative } from "~/utils/relative-time";
-
-const apiGetResponseSchema = z.object({
-  date: z.string().min(1),
-});
+import { decode } from "~/utils/date-decoding";
 
 export default async function BreakPage({
   params,
 }: {
-  params: { id: string };
+  params: { dateString: string };
 }) {
-  // TODO: handle errors
-  // TODO: maybe generate static params
-  const result = await fetch(`${getApiUrl()}/api/breaks/${params.id}`);
-  const json = (await result.json()) as unknown;
-  const { date } = apiGetResponseSchema.parse(json);
-  const dateObj = new Date(date);
-
-  const relativeTime = dateToRelative(dateObj);
+  const dateObj = new Date(decode(params.dateString));
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center supports-[height:100dvh]:min-h-[100dvh]">
@@ -32,14 +19,10 @@ export default async function BreakPage({
         Break<span className="text-emerald-400">Chrono</span>
       </Link>
       <div className="absolute top-32 text-center 2xl:top-10">
-        <CopyLink id={params.id} />
+        <CopyLink dateString={params.dateString} />
       </div>
       <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
         <div>
-          {/* <h2>
-            {/* FIXME: that doesn't update */}
-          {/*{isBreakOver ? "Break ended" : "Break ends"} {relativeTime} /*}
-          {/*</h2> */}
           <Timer end={dateObj} />
         </div>
       </div>

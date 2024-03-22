@@ -13,7 +13,6 @@
     "@t3-oss/env-nextjs": "^0.7.1",
     "clsx": "^2.0.0",
     "copy-to-clipboard": "^3.3.3",
-    "dayjs": "^1.11.10",
     "lucide-react": "^0.298.0",
     "next": "^14.0.3",
     "react": "18.2.0",
